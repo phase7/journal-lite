@@ -1,1 +1,1 @@
-# toy-diary
+# Lite Journal
