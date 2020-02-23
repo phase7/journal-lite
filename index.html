@@ -1,32 +1,60 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Toy Diary</title>
-	<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.css">
-	<script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.slim.js"></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Toy Diary</title>
+    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.css">
+
+    <style>
+    	#input-field{
+    		 display: none;
+    	}
+    </style>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.js"></script>
     <script type="text/javascript" src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.js"></script>
-
     <!-- <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.css"> -->
 </head>
+
 <body>
-	<div class="container my-md-3 p-2">
-		<div class="jumbotron text-center text-dark"><h1>Toy Diary</h1></div>
-		<div class="container">
-			<div id="input-field">
-				<form action="#" class="form-group">
-					<label for="post-title">Title</label>
-					<input type="text" class="form-control w-50">
+    <div class="container my-md-1 p-2">
+        <div class="jumbotron text-center text-dark">
+            <h1>Toy Diary</h1>
+        </div>
+        <div class="container">
+            <h2 id="triggerNew" class="w-25"><i class="text-primary" style="cursor: pointer;">New Entry</i></h2>
+            <div id="input-field">
+                <form action="#" class="form-group">
+                    <label for="post-title">Title</label>
+                    <input type="text" class="form-control w-50" id="post-title">
+                    <label for="post-content">Content</label>
+                    <textarea name="post-content-body" id="post-content-body" cols="30" rows="5" class="form-control"></textarea>
+                    <div class="my-2 d-flex flex-row align-items-center justify-content-center">
+                        <button class="btn btn-outline-info" id="add-post">Add!</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+    $(document).ready(function() {
+                $("#triggerNew").click(function() {
+                    $("#input-field").slideDown("fast");
+                });
 
-					<label for="post-content">Content</label>
-					<textarea name="post-content-body" id="post-content-body" cols="30" rows="10" class="form-control"></textarea>
+                $("#add-post").click(
+                	function(){
+                		$("#input-field").slideUp("slow");
+                		$('body').append($("#post-title").val());
+                	});
 
-				</form>
-			</div>
-		</div>
-	</div>
-	
+                
+
+
+            });
+    </script>
 </body>
+
 </html>
