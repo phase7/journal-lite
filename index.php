@@ -6,10 +6,10 @@
 $cookie_name = "uid";
 
 if(!isset($_COOKIE[$cookie_name])) {
-    print("Hello New User!");
     $cookie_value = uniqid();
     $cookie_domain = "/";
     setcookie($cookie_name, $cookie_value, time() + (86400 * 30), $cookie_domain); // 86400 = 1 day
+    print("Hello New User!");
 
 } else {
     print("Hey I've seen you before!");
