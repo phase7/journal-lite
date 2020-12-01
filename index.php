@@ -1,3 +1,24 @@
+<?php
+
+//******user id using cookies******
+/*********************************/
+
+$cookie_name = "uid";
+$cookie_value = uniqid();
+$cookie_domain = "/";
+
+if(!isset($_COOKIE[$cookie_name])) {
+  print("Hello New User!");
+    setcookie($cookie_name, $cookie_value, time() + (86400 * 30), $cookie_domain); // 86400 = 1 day
+
+} else {
+    print("Hey I've seen you before!");
+    $current_user = $_COOKIE[$cookie_name];
+    $journal_entries = ""; //for loading from backend
+}
+
+
+ ?>
 <!DOCTYPE html>
 <html>
 
