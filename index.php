@@ -4,11 +4,11 @@
 /*********************************/
 
 $cookie_name = "uid";
-$cookie_value = uniqid();
-$cookie_domain = "/";
 
 if(!isset($_COOKIE[$cookie_name])) {
-  print("Hello New User!");
+    print("Hello New User!");
+    $cookie_value = uniqid();
+    $cookie_domain = "/";
     setcookie($cookie_name, $cookie_value, time() + (86400 * 30), $cookie_domain); // 86400 = 1 day
 
 } else {
@@ -69,7 +69,13 @@ if(!isset($_COOKIE[$cookie_name])) {
         </div>
     </div>
     <script>
-    $(document).ready(function() {      
+
+    var data ={
+        user : "<?=$current_user?>",
+
+    }
+    var entries = [];      
+    $(document).ready(function() {
 
         $("#triggerNew").click(function() {
             $("#input-field").slideDown("fast");
@@ -80,6 +86,7 @@ if(!isset($_COOKIE[$cookie_name])) {
                     $("#input-field").slideUp("slow");
                     // $('body').append($("#post-title").val());
                     var datetime = (new Date).toLocaleString();
+                    var entry_id = $.now();
 
 
                     var post_title = $("<div></div>").text(datetime);
@@ -91,15 +98,19 @@ if(!isset($_COOKIE[$cookie_name])) {
                     post_content_body.addClass("card-body");
 
 
-                    var diary_post = $("<div></div>").addClass("diary-post card my-md-3").prop("id", $.now());
+                    var diary_post = $("<div></div>").addClass("diary-post card my-md-3").prop("id", entry_id);
                     diary_post.append(post_title).append(post_content_body);
 
 
                     $(".diary").prepend(diary_post);
 
+
+                    var entry = { "id" : entry_id, "title":$("#post-title").val() , "content": $("#post-content-body").val() }
+                    entries.push(entry);
                 }
             });
     });
+    data["entries"] = entries;
     </script>
 </body>
 
