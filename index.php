@@ -12,11 +12,22 @@ if(!isset($_COOKIE[$cookie_name])) {
     $cookie_domain = "/";
     setcookie($cookie_name, $cookie_value, time() + (86400 * 200), $cookie_domain); // 86400 = 1 day
     print("Hello New User!");
+    $data_json = "";
 
 } else {
-    print("Hey I've seen you before!");
+    // print("Hey I've seen you before!");
     $current_user = $_COOKIE[$cookie_name];
-    $journal_entries = ""; //for loading from backend
+    $sql_getEntries = "select data from entries where juid = '$current_user'";
+    if ($result = mysqli_query($conn, $sql_getEntries)){
+        $data_fromdb = mysqli_fetch_row($result)[0];
+        $data_json = base64_decode($data_fromdb);
+        $journal_data = json_decode($data_json, true); //for loading from backend
+        $journal_entries = $journal_data['entries'];
+
+        // var_dump($journal_entries);
+        print($data_fromdb);
+        // print($journal_entries[1]['content']);
+    }
 }
 
 
@@ -110,11 +121,19 @@ if(!isset($_COOKIE[$cookie_name])) {
 
                     entries.push(entry);
                     data["entries"] = entries;
+                    // console.log(JSON.stringify(entries));
                     send_data(data);
                 }
             });
+
+             if ('<?=$data_fromdb?>' !== ""){
+                var data_fromdb = '<?=$data_fromdb?>';
+                data = JSON.parse(atob(data_fromdb));
+                // data = JSON.parse(data_json);
+                console.log((data))
+            }
     });
-    function send_data(data){ $.post("add.php", {data});};
+    function send_data(data){ $.post("add.php", {data : btoa(JSON.stringify(data)), juid : data['user']}); console.log};
                     
     </script>
 </body>
