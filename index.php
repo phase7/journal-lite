@@ -4,11 +4,13 @@
 /*********************************/
 
 $cookie_name = "uid";
+include('connect.php');
 
 if(!isset($_COOKIE[$cookie_name])) {
     $cookie_value = uniqid();
+    $current_user = $cookie_value;
     $cookie_domain = "/";
-    setcookie($cookie_name, $cookie_value, time() + (86400 * 30), $cookie_domain); // 86400 = 1 day
+    setcookie($cookie_name, $cookie_value, time() + (86400 * 200), $cookie_domain); // 86400 = 1 day
     print("Hello New User!");
 
 } else {
@@ -85,32 +87,35 @@ if(!isset($_COOKIE[$cookie_name])) {
                 if ((($("#post-content-body").val() == '') || ($("#post-title").val() == '')) == false) { //returns true when both field have some 
                     $("#input-field").slideUp("slow");
                     // $('body').append($("#post-title").val());
+                    
+                    var entry = { "id" : $.now(), "title":$("#post-title").val() , "content": $("#post-content-body").val() }
+                    
+                    // var entry_id = entry.id;
                     var datetime = (new Date).toLocaleString();
-                    var entry_id = $.now();
-
-
                     var post_title = $("<div></div>").text(datetime);
-                    post_title.append("<h3>"+$("#post-title").val()+"</h3>");
+                    post_title.append("<h3>"+entry.title+"</h3>");
                     post_title.addClass("card-header");
 
 
-                    var post_content_body = $("<div></div>").text($("#post-content-body").val());
+                    var post_content_body = $("<div></div>").text(entry.content);
                     post_content_body.addClass("card-body");
 
 
-                    var diary_post = $("<div></div>").addClass("diary-post card my-md-3").prop("id", entry_id);
+                    var diary_post = $("<div></div>").addClass("diary-post card my-md-3").prop("id", entry.id);
                     diary_post.append(post_title).append(post_content_body);
 
 
                     $(".diary").prepend(diary_post);
 
 
-                    var entry = { "id" : entry_id, "title":$("#post-title").val() , "content": $("#post-content-body").val() }
                     entries.push(entry);
+                    data["entries"] = entries;
+                    send_data(data);
                 }
             });
     });
-    data["entries"] = entries;
+    function send_data(data){ $.post("add.php", {data});};
+                    
     </script>
 </body>
 
