@@ -140,18 +140,18 @@ if(!isset($_COOKIE[$cookie_name])) {
                 var data_fromdb = '<?=$data_fromdb?>';
                 data = JSON.parse(atob(data_fromdb));
                 // data = JSON.parse(data_json);
-                console.log((data))
+                // console.log((data))
                 data.entries.forEach(addEntry);
             }
             $(".del-btn").click(function(){
                 var diary_post = $(this).closest(".diary-post");
                 diary_post.slideUp();
-                console.log(diary_post.attr("id"));
+                // console.log(diary_post.attr("id"));
                 data.entries = data.entries.filter(function(item){
                     return item.id != diary_post.attr("id");
                 });
 
-                console.log(data);
+                // console.log(data);
 
                 send_data(data);
             });
