@@ -96,9 +96,14 @@ if(!isset($_COOKIE[$cookie_name])) {
         function addEntry(entry){
 
             var datetime = (new Date(entry.id)).toLocaleString();
-            var post_title = $("<div></div>").text(datetime);
+            var post_title = $("<div></div>").html("<br>"+datetime);
             post_title.append("<h3>"+entry.title+"</h3>");
             post_title.addClass("card-header");
+
+            var delete_button = $("<button></button>").text("Delete!");
+            delete_button.addClass("btn btn-sm btn-danger del-btn");
+
+            post_title.prepend(delete_button);
 
             var post_content_body = $("<div></div>").text(entry.content);
             post_content_body.addClass("card-body");
@@ -135,8 +140,11 @@ if(!isset($_COOKIE[$cookie_name])) {
                 console.log((data))
                 data.entries.forEach(addEntry);
             }
-    });
-    function send_data(data){ $.post("add.php", {data : btoa(JSON.stringify(data)), juid : data['user']}); console.log};
+            $(".del-btn").click(function(){
+                $(this).closest(".diary-post").slideUp();
+            });
+        function send_data(data){ $.post("add.php", {data : btoa(JSON.stringify(data)), juid : data['user']}); console.log};
+        });
                     
     </script>
 </body>
