@@ -12,7 +12,7 @@ if(!isset($_COOKIE[$cookie_name])) {
     $cookie_domain = "/";
     setcookie($cookie_name, $cookie_value, time() + (86400 * 200), $cookie_domain); // 86400 = 1 day
     print("Hello New User!");
-    $data_json = "";
+    $data_fromdb = "";
 
 } else {
     // print("Hey I've seen you before!");
@@ -135,7 +135,7 @@ if(!isset($_COOKIE[$cookie_name])) {
                 var data_fromdb = '<?=$data_fromdb?>';
                 data = JSON.parse(atob(data_fromdb));
                 // data = JSON.parse(data_json);
-                console.log((data))
+                // console.log((data))
                 data.entries.forEach(addEntry);
             }
     });
