@@ -60,25 +60,30 @@ if(!isset($_COOKIE[$cookie_name])) {
 
 <body>
     <div class="container my-md-1 p-2">
-        <div class="jumbotron text-center text-dark">
-            <h1>Daily Journal</h1>
-        </div>
-        <div class="container">
-            <h2 id="triggerNew" class="w-25"><button class="btn btn-lg btn-outline-primary" style="cursor: pointer;">New Entry</button></h2>
-            <div id="input-field">
-                <form action="#" class="form-group">
-                    <label for="post-title">Title</label>
-                    <input type="text" class="form-control w-50" id="post-title" required>
-                    <label for="post-content">Content</label>
-                    <textarea name="" id="post-content-body" cols="30" rows="5" class="form-control" required></textarea>
-                    <div class="my-2 d-flex flex-row align-items-center justify-content-center">
-                        <button class="btn btn-outline-info" id="add-post" type="button">Add!</button>
-                    </div>
-                </form>
+        <div class="row">
+
+            <div class="col-sm-2"></div>
+
+            <div class="col-sm-8">
+                <div class="text-center text-light my-2 py-4 bg-secondary">
+                    <h1>Daily Journal</h1>
+                </div>
+
+                <h2 id="triggerNew" class="w-25"><button class="btn btn-lg btn-outline-primary" style="cursor: pointer;">New Entry</button></h2>
+                <div id="input-field">
+                    <form action="#" class="form-group">
+                        <label for="post-title">Title</label>
+                        <input type="text" class="form-control w-50" id="post-title" required>
+                        <label for="post-content">Content</label>
+                        <textarea name="" id="post-content-body" cols="30" rows="5" class="form-control" required></textarea>
+                        <div class="my-2 d-flex flex-row align-items-center justify-content-center">
+                            <button class="btn btn-outline-info" id="add-post" type="button">Add!</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="diary my-1"></div>
             </div>
-            <div class="diary my-1">
-            	
-            </div>
+            <div class="col-sm-2"></div>
         </div>
     </div>
     <script>
@@ -100,7 +105,7 @@ if(!isset($_COOKIE[$cookie_name])) {
             post_content_body.addClass("card-body");
 
 
-            var diary_post = $("<div></div>").addClass("diary-post card my-md-3").prop("id", entry.id);
+            var diary_post = $("<div></div>").addClass("diary-post card my-md-3 my-1").prop("id", entry.id);
             diary_post.append(post_title).append(post_content_body);
 
 
