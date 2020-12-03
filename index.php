@@ -25,7 +25,7 @@ if(!isset($_COOKIE[$cookie_name])) {
         $journal_entries = $journal_data['entries'];
 
         // var_dump($journal_entries);
-        print($data_fromdb);
+        // print($data_fromdb);
         // print($journal_entries[1]['content']);
     }
 }
@@ -88,6 +88,27 @@ if(!isset($_COOKIE[$cookie_name])) {
 
     }
     var entries = [];      
+        function addEntry(entry){
+
+            var datetime = (new Date).toLocaleString();
+            var post_title = $("<div></div>").text(datetime);
+            post_title.append("<h3>"+entry.title+"</h3>");
+            post_title.addClass("card-header");
+
+
+            var post_content_body = $("<div></div>").text(entry.content);
+            post_content_body.addClass("card-body");
+
+
+            var diary_post = $("<div></div>").addClass("diary-post card my-md-3").prop("id", entry.id);
+            diary_post.append(post_title).append(post_content_body);
+
+
+            $(".diary").prepend(diary_post);
+
+
+            entries.push(entry);
+            }
     $(document).ready(function() {
 
         $("#triggerNew").click(function() {
@@ -102,24 +123,8 @@ if(!isset($_COOKIE[$cookie_name])) {
                     var entry = { "id" : $.now(), "title":$("#post-title").val() , "content": $("#post-content-body").val() }
                     
                     // var entry_id = entry.id;
-                    var datetime = (new Date).toLocaleString();
-                    var post_title = $("<div></div>").text(datetime);
-                    post_title.append("<h3>"+entry.title+"</h3>");
-                    post_title.addClass("card-header");
-
-
-                    var post_content_body = $("<div></div>").text(entry.content);
-                    post_content_body.addClass("card-body");
-
-
-                    var diary_post = $("<div></div>").addClass("diary-post card my-md-3").prop("id", entry.id);
-                    diary_post.append(post_title).append(post_content_body);
-
-
-                    $(".diary").prepend(diary_post);
-
-
-                    entries.push(entry);
+                    
+                    addEntry(entry);
                     data["entries"] = entries;
                     // console.log(JSON.stringify(entries));
                     send_data(data);
@@ -131,6 +136,7 @@ if(!isset($_COOKIE[$cookie_name])) {
                 data = JSON.parse(atob(data_fromdb));
                 // data = JSON.parse(data_json);
                 console.log((data))
+                data.entries.forEach(addEntry);
             }
     });
     function send_data(data){ $.post("add.php", {data : btoa(JSON.stringify(data)), juid : data['user']}); console.log};
