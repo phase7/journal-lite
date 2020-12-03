@@ -90,9 +90,9 @@ if(!isset($_COOKIE[$cookie_name])) {
 
     var data ={
         user : "<?=$current_user?>",
+        entries : []
 
-    }
-    var entries = [];      
+    }      
         function addEntry(entry){
 
             var datetime = (new Date(entry.id)).toLocaleString();
@@ -120,10 +120,9 @@ if(!isset($_COOKIE[$cookie_name])) {
             function() {
                 if ((($("#post-content-body").val() == '') || ($("#post-title").val() == '')) == false) { //returns true when both field have some 
                     $("#input-field").slideUp("slow");                                        
-                    var entry = { "id" : $.now(), "title":$("#post-title").val() , "content": $("#post-content-body").val() }
+                    var entry = { "id" : Date.now(), "title":$("#post-title").val() , "content": $("#post-content-body").val() }
                     addEntry(entry);
-                    entries.push(entry);
-                    data["entries"] = entries;
+                    data["entries"].push(entry);
                     // console.log(JSON.stringify(entries));
                     send_data(data);
                 }
@@ -133,7 +132,7 @@ if(!isset($_COOKIE[$cookie_name])) {
                 var data_fromdb = '<?=$data_fromdb?>';
                 data = JSON.parse(atob(data_fromdb));
                 // data = JSON.parse(data_json);
-                // console.log((data))
+                console.log((data))
                 data.entries.forEach(addEntry);
             }
     });
