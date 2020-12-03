@@ -95,7 +95,7 @@ if(!isset($_COOKIE[$cookie_name])) {
     var entries = [];      
         function addEntry(entry){
 
-            var datetime = (new Date).toLocaleString();
+            var datetime = (new Date(entry.id)).toLocaleString();
             var post_title = $("<div></div>").text(datetime);
             post_title.append("<h3>"+entry.title+"</h3>");
             post_title.addClass("card-header");
