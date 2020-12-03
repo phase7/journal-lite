@@ -64,7 +64,7 @@ if(!isset($_COOKIE[$cookie_name])) {
             <h1>Daily Journal</h1>
         </div>
         <div class="container">
-            <h2 id="triggerNew" class="w-25"><span class="text-primary" style="cursor: pointer;">New Entry</span></h2>
+            <h2 id="triggerNew" class="w-25"><button class="btn btn-lg btn-outline-primary" style="cursor: pointer;">New Entry</button></h2>
             <div id="input-field">
                 <form action="#" class="form-group">
                     <label for="post-title">Title</label>
@@ -113,6 +113,8 @@ if(!isset($_COOKIE[$cookie_name])) {
 
         $("#triggerNew").click(function() {
             $("#input-field").slideDown("fast");
+            $("#post-title").val("");
+            $("#post-content-body").val("");
         });
         $("#add-post").click(
             function() {
