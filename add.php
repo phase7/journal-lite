@@ -9,6 +9,6 @@
          if (!$sql_result_insert) {
             print(mysqli_error($conn));
            }
-        print( 'executed : '.$sql_insert);
+        // print( 'executed : '.$sql_insert);
     }
 ?>

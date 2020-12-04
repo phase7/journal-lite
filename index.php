@@ -90,31 +90,45 @@ if(!isset($_COOKIE[$cookie_name])) {
 
     var data ={
         user : "<?=$current_user?>",
+        entries : []
 
-    }
-    var entries = [];      
+    }      
         function addEntry(entry){
 
-            var datetime = (new Date).toLocaleString();
-            var post_title = $("<div></div>").text(datetime);
+            var datetime = (new Date(entry.id)).toLocaleString();
+            var post_title = $("<div></div>").html("<br>"+datetime);
             post_title.append("<h3>"+entry.title+"</h3>");
             post_title.addClass("card-header");
 
+            var delete_button = $("<button></button>").text("Delete!");
+            delete_button.addClass("btn btn-sm btn-danger del-btn").attr("onClick", "deleteMe(this)");
+
+            post_title.prepend(delete_button);
 
             var post_content_body = $("<div></div>").text(entry.content);
             post_content_body.addClass("card-body");
 
-
             var diary_post = $("<div></div>").addClass("diary-post card my-md-3 my-1").prop("id", entry.id);
             diary_post.append(post_title).append(post_content_body);
 
-
-            $(".diary").prepend(diary_post);
-
-
-            entries.push(entry);
+            $(".diary").prepend(diary_post);   
             }
+
+        function send_data(data){ $.post("add.php", {data : btoa(JSON.stringify(data)), juid : data['user']});};
+        
+        function deleteMe(elem){
+                var diary_post = $(elem).closest(".diary-post");
+                diary_post.slideUp();
+                data.entries = data.entries.filter(function(item){
+                    return item.id != diary_post.attr("id");
+                });
+
+
+                send_data(data);
+            };
+
     $(document).ready(function() {
+        //implement delete https://stackoverflow.com/a/20690490/11764123
 
         $("#triggerNew").click(function() {
             $("#input-field").slideDown("fast");
@@ -124,15 +138,10 @@ if(!isset($_COOKIE[$cookie_name])) {
         $("#add-post").click(
             function() {
                 if ((($("#post-content-body").val() == '') || ($("#post-title").val() == '')) == false) { //returns true when both field have some 
-                    $("#input-field").slideUp("slow");
-                    // $('body').append($("#post-title").val());
-                    
-                    var entry = { "id" : $.now(), "title":$("#post-title").val() , "content": $("#post-content-body").val() }
-                    
-                    // var entry_id = entry.id;
-                    
+                    $("#input-field").slideUp("slow");                                        
+                    var entry = { "id" : Date.now(), "title":$("#post-title").val() , "content": $("#post-content-body").val() }
                     addEntry(entry);
-                    data["entries"] = entries;
+                    data["entries"].push(entry);
                     // console.log(JSON.stringify(entries));
                     send_data(data);
                 }
@@ -145,8 +154,8 @@ if(!isset($_COOKIE[$cookie_name])) {
                 // console.log((data))
                 data.entries.forEach(addEntry);
             }
-    });
-    function send_data(data){ $.post("add.php", {data : btoa(JSON.stringify(data)), juid : data['user']}); console.log};
+            
+        });
                     
     </script>
 </body>
