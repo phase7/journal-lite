@@ -20,14 +20,31 @@ if(!isset($_COOKIE[$cookie_name])) {
     $sql_getEntries = "select data from entries where juid = '$current_user'";
     if ($result = mysqli_query($conn, $sql_getEntries)){
         $data_fromdb = mysqli_fetch_row($result)[0];
-        $data_json = base64_decode($data_fromdb);
-        $journal_data = json_decode($data_json, true); //for loading from backend
-        $journal_entries = $journal_data['entries'];
+        // $data_json = base64_decode($data_fromdb);
+        // $journal_data = json_decode($data_json, true); //for loading from backend
+        // $journal_entries = $journal_data['entries'];
 
         // var_dump($journal_entries);
         // print($data_fromdb);
         // print($journal_entries[1]['content']);
     }
+}
+/************
+ * get assignees
+ */
+$sql_assignees = "SELECT * FROM `asignees`";
+$assignees = array();
+$idx = 0;
+if ($result = mysqli_query($conn, $sql_assignees)){
+    //$data_fromdb = mysqli_fetch_row($result); 
+    while($row = mysqli_fetch_assoc($result)){
+        $assignees[$idx]["name"] = $row["name"];
+        $assignees[$idx]["id"] = $row["id"];
+        $idx++;
+        // print_r($row["name"]);
+        // print("\n");
+    }
+    var_dump(json_encode($assignees));
 }
 
 
@@ -87,12 +104,12 @@ if(!isset($_COOKIE[$cookie_name])) {
         </div>
     </div>
     <script>
-
+    var all_assignees = <?= json_encode($assignees) ?>;
     var data ={
         user : "<?=$current_user?>",
         entries : []
 
-    }      
+    }
         function addEntry(entry){
 
             var datetime = (new Date(entry.id)).toLocaleString();
@@ -101,12 +118,25 @@ if(!isset($_COOKIE[$cookie_name])) {
             post_title.addClass("card-header");
 
             var delete_button = $("<button></button>").text("Delete!");
-            delete_button.addClass("btn btn-sm btn-danger del-btn").attr("onClick", "deleteMe(this)");
+            delete_button.addClass("btn btn-sm btn-danger mx-1 del-btn").attr("onClick", "deleteMe(this)");
 
             var edit_button = $("<button></button>").text("Change");
-            edit_button.addClass("btn btn-sm btn-primary mx-1 edit-btn").attr("onClick", "editMe(this)");
+            edit_button.addClass("btn btn-sm btn-primary edit-btn").attr("onClick", "editMe(this)");
 
-            post_title.prepend(delete_button).prepend(edit_button);
+            var label_assign = $("<label></label>").html("Assigned to :&nbsp");
+
+            var select_assign = $("<select></select>");
+            select_assign.append("<option value=\"0\">none</option>");
+            all_assignees.forEach(function (item){
+                select_assign.append(`<option value=${item['name']}>`+item['name']+"</option>");
+            });
+
+            if (entry.assignee !== ""){
+                select_assign.val(entry.assignee).change();
+            }
+            select_assign.attr("onChange", "selectMe(this)");
+            
+            post_title.prepend(delete_button).prepend(edit_button).append(label_assign).append(select_assign);
 
             var post_content_body = $("<div></div>").text(entry.content);
             post_content_body.addClass("card-body");
@@ -141,10 +171,30 @@ if(!isset($_COOKIE[$cookie_name])) {
             $('#triggerNew').trigger('click');
             $("#post-title").val(post_title);
             $("#post-content-body").val(post_content);
-        };            
+        }; 
+        function selectMe(elem){
+            // alert($(elem).children("option:selected").val());
+            entry_id = $(elem).parent().parent().attr("id");
+            data.entries.forEach(function(item){
+                // console.log(item.id, item.id == entry_id);
+                if (item.id == entry_id){
+                    item["assignee"] = $(elem).children("option:selected").val();
+                    // console.log(item['assignee']);
+                }
+            });
+            send_data(data);
+        };
 
     $(document).ready(function() {
         //implement delete https://stackoverflow.com/a/20690490/11764123
+
+        if ('<?=$data_fromdb?>' !== ""){
+                var data_fromdb = '<?=$data_fromdb?>';
+                data = JSON.parse(atob(data_fromdb));
+                // data = JSON.parse(data_json);
+                // console.log((data))
+                data.entries.forEach(addEntry);
+            }
 
         $("#triggerNew").click(function() {
             $("#input-field").slideDown("fast");
@@ -155,22 +205,14 @@ if(!isset($_COOKIE[$cookie_name])) {
             function() {
                 if ((($("#post-content-body").val() == '') || ($("#post-title").val() == '')) == false) { //returns true when both field have some 
                     $("#input-field").slideUp("slow");                                        
-                    var entry = { "id" : Date.now(), "title":$("#post-title").val() , "content": $("#post-content-body").val() }
+                    var entry = { "id" : Date.now(), "title":$("#post-title").val() , "content": $("#post-content-body").val(), "assignee": "" }
                     addEntry(entry);
                     data["entries"].push(entry);
                     // console.log(JSON.stringify(entries));
                     send_data(data);
                 }
             });
-
-             if ('<?=$data_fromdb?>' !== ""){
-                var data_fromdb = '<?=$data_fromdb?>';
-                data = JSON.parse(atob(data_fromdb));
-                // data = JSON.parse(data_json);
-                // console.log((data))
-                data.entries.forEach(addEntry);
-            }
-            
+           
         });
                     
     </script>
