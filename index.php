@@ -18,15 +18,9 @@ if(!isset($_COOKIE[$cookie_name])) {
     // print("Hey I've seen you before!");
     $current_user = $_COOKIE[$cookie_name];
     $sql_getEntries = "select data from entries where juid = '$current_user'";
-    if ($result = mysqli_query($conn, $sql_getEntries)){
-        $data_fromdb = mysqli_fetch_row($result)[0];
-        // $data_json = base64_decode($data_fromdb);
-        // $journal_data = json_decode($data_json, true); //for loading from backend
-        // $journal_entries = $journal_data['entries'];
-
-        // var_dump($journal_entries);
-        // print($data_fromdb);
-        // print($journal_entries[1]['content']);
+    if ($result = $conn -> query($sql_getEntries)){
+        $data_fromdb = $result -> fetch_row()[0];
+        
     }
 }
 /************
@@ -35,9 +29,9 @@ if(!isset($_COOKIE[$cookie_name])) {
 $sql_assignees = "SELECT * FROM `asignees`";
 $assignees = array();
 $idx = 0;
-if ($result = mysqli_query($conn, $sql_assignees)){
+if ($result = $conn -> query($sql_assignees)){
     //$data_fromdb = mysqli_fetch_row($result); 
-    while($row = mysqli_fetch_assoc($result)){
+    while($row = $result -> fetch_assoc()){
         $assignees[$idx]["name"] = $row["name"];
         $assignees[$idx]["id"] = $row["id"];
         $idx++;

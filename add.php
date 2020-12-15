@@ -5,9 +5,9 @@
         $data = (($_POST['data']));
         $juid = $_POST['juid'];
         $sql_insert = "INSERT INTO `entries`(`juid`, `data`) VALUES ('$juid', '$data') on duplicate KEY UPDATE `data` = '$data'";
-         $sql_result_insert = mysqli_query($conn, $sql_insert);
-         if (!$sql_result_insert) {
-            print(mysqli_error($conn));
+         $sql_result_insert = $conn -> query($sql_insert);
+         if ($conn -> error) {
+            print($conn -> error);
            }
         // print( 'executed : '.$sql_insert);
     }
