@@ -103,7 +103,10 @@ if(!isset($_COOKIE[$cookie_name])) {
             var delete_button = $("<button></button>").text("Delete!");
             delete_button.addClass("btn btn-sm btn-danger del-btn").attr("onClick", "deleteMe(this)");
 
-            post_title.prepend(delete_button);
+            var edit_button = $("<button></button>").text("Change");
+            edit_button.addClass("btn btn-sm btn-primary mx-1 edit-btn").attr("onClick", "editMe(this)");
+
+            post_title.prepend(delete_button).prepend(edit_button);
 
             var post_content_body = $("<div></div>").text(entry.content);
             post_content_body.addClass("card-body");
@@ -126,6 +129,19 @@ if(!isset($_COOKIE[$cookie_name])) {
 
                 send_data(data);
             };
+
+        function editMe(elem){
+            var diary_post = $(elem).closest(".diary-post");
+            diary_post.slideUp();
+            data.entries = data.entries.filter(function(item){
+                return item.id != diary_post.attr("id");
+            });
+            var post_title = $(elem).siblings("h3").html();
+            var post_content = $(elem).parent().siblings(".card-body").html();
+            $('#triggerNew').trigger('click');
+            $("#post-title").val(post_title);
+            $("#post-content-body").val(post_content);
+        };            
 
     $(document).ready(function() {
         //implement delete https://stackoverflow.com/a/20690490/11764123
