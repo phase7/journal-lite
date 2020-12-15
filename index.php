@@ -44,7 +44,6 @@ if ($result = mysqli_query($conn, $sql_assignees)){
         // print_r($row["name"]);
         // print("\n");
     }
-    var_dump(json_encode($assignees));
 }
 
 
